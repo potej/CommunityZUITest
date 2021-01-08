@@ -1,9 +1,12 @@
 const { CommunitySearch } = require('../PageObjects/communitySearch.page');
 const { MasterPage } = require('../PageObjects/master.page.js');
 const { CommunityPanel } = require('../PageObjects/communityCardPanel.page.js')
+const { GenericHelper } = require('../Helpers/generic.helper.js')
+
 let communitySearchPage = new CommunitySearch(),
     masterPage = new MasterPage(),
-    communityPanel = new CommunityPanel();
+    communityPanel = new CommunityPanel(),
+    genericHelper = new GenericHelper();
 
 describe("Community search by name", () => {
     beforeAll(async () => {
@@ -56,5 +59,21 @@ describe("Community search by Location", () => {
         await oneCard.click();
         await browser.sleep(2000); // TODO: handle waits
         expect(await communityPanel.divLocation.getText()).toContain(selectedLocation);
+    });
+});
+describe("Community search", () => {
+    // Possible bug: 'Budapest Java Community' has no location info, still listed under Location = Hungary
+    beforeAll(async () => {
+        await masterPage.navigateTo(browser.params.systemUnderTestUrl);
+        await communitySearchPage.buttonSeeAllCommunities.click();
+    });
+    it("should not find results if there isn't any", async () => {
+        expect(await browser.isElementPresent(communitySearchPage.divNoResults)).toBe(false);
+        let rnd = genericHelper.getRandomNumber(999999);
+        console.log(`Our random number: ${rnd}`);
+        await communitySearchPage.editSearchField.sendKeys(rnd);
+        await browser.sleep(2000); // TODO: handle waits
+        expect(await browser.isElementPresent(communitySearchPage.divNoResults)).toBe(true);
+
     });
 });

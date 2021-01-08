@@ -10,7 +10,7 @@ class CommunitySearch {
     get divCommunityCards() { return $$('.evnt-community-card') };
     get divCommunityName() { return $('.evnt-name-wrapper') };
     get divCommunityNames() { return $$('.evnt-name-wrapper') };
-
+    get divNoResults() { return $('.evnt-filters-not-found') };
 
     async getRandomCommunityCardFromList() { // TODO: handle banners among community cards
         let max = await this.getNumberOfDisplayedCards();
